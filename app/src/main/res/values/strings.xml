@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Expotec IFRN/SC - Eventos</string>
+    <string name="activities_screen">Expotec IFRN/SC - Atividades</string>
+    <string name="action_settings">Settings</string>
+</resources>
