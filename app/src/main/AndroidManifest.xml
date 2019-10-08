@@ -28,7 +28,9 @@
         <activity
             android:name=".telas.MainActivity"
             android:label="@string/activities_screen"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>

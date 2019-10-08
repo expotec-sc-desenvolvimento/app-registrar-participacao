@@ -2,6 +2,7 @@ package br.edu.ifrn.sc.expotec.autenticador.telas;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -104,13 +105,16 @@ public class MainActivity extends AppCompatActivity {
 
             if (resultado != null && !resultado.isEmpty()) {
 
-                Activity activity = activityAdapter.getSelectedActivity();
-
-                long userUuid = Long.parseLong(resultado);
-                long activityUuid = activity.getUuid();
-                this.registrarParticipacao(activityUuid, userUuid);
-
-                Toast.makeText(MainActivity.this, "Autenticando usuário: " + userUuid + " para o activity: " + activity.getTitle(), Toast.LENGTH_LONG).show();
+                try{
+                    long userUuid = Long.parseLong(resultado);
+                    Activity activity = activityAdapter.getSelectedActivity();
+                    long activityUuid = activity.getUuid();
+                    this.registrarParticipacao(activityUuid, userUuid);
+                }
+                catch (NumberFormatException nfex) {
+                    Toast.makeText(MainActivity.this, "Código QR inválido!", Toast.LENGTH_LONG).show();
+                }
+     //           Toast.makeText(MainActivity.this, "Autenticando usuário: " + userUuid + " para o activity: " + activity.getTitle() + activity.getUuid(), Toast.LENGTH_LONG).show();
             }
         }
         else {
@@ -129,10 +133,12 @@ public class MainActivity extends AppCompatActivity {
 
                 boolean resposta = response.body();
 
-                if (resposta)
-                    Toast.makeText(MainActivity.this, "Participação Registrada com sucesso!", Toast.LENGTH_LONG).show();
+                if (resposta) {
+                    Toast.makeText(MainActivity.this, "Participação registrada com sucesso!", Toast.LENGTH_LONG).show();
+
+                }
                 else {
-                    Toast.makeText(MainActivity.this, "Erro ao tentar registrar participação no evento!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "Erro ao tentar registrar participação! O usuário não está inscrito na atividade!", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -204,5 +210,19 @@ public class MainActivity extends AppCompatActivity {
         else {
             Snackbar.make(coordinatorLayout, "Sem conexão com Internet!", Snackbar.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
+
+    public void finish() {
+        SharedPreferences sharedPreferences = getSharedPreferences("user_preferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.clear();
+        editor.commit();
     }
 }

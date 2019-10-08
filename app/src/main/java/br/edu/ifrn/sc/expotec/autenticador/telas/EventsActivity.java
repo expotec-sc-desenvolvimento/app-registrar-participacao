@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -84,5 +85,19 @@ public class EventsActivity extends AppCompatActivity {
         else {
             Snackbar.make(constraintLayout, "Sem conexão com Internet!", Snackbar.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
+
+    public void finish() {
+        SharedPreferences sharedPreferences = getSharedPreferences("user_preferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.clear();
+        editor.commit();
     }
 }
